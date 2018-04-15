@@ -23,6 +23,7 @@ Makefile.in
 /install-sh
 /missing
 /stamp-h1
+/build-aux
 
 # https://www.gnu.org/software/libtool/
 
@@ -31,3 +32,8 @@ Makefile.in
 # http://www.gnu.org/software/texinfo
 
 /texinfo.tex
+
+*.gcno
+*.gcda
+*.o
+
