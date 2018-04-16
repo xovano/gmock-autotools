@@ -2,7 +2,7 @@ AC_INIT([toy-test], [1.0], [tienntr@gmail.com])
 AC_CONFIG_AUX_DIR([build-aux])
 #AC_CONFIG_MACRO_DIR([m4])
 
-AM_INIT_AUTOMAKE([foreign -Wall -Werror subdir-objects])
+AM_INIT_AUTOMAKE([foreign -Wall])
 
 :${CXXFLAGS=""}
 AC_PROG_CXX

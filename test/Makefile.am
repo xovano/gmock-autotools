@@ -1,37 +1,44 @@
-#ACLOCAL_AMFLAGS = -I m4
-AM_CXXFLAGS = -Wall -Wextra -pedantic -std=c++11
+# Pthread should be enabled everywhere when Gtest is used
+AM_CXXFLAGS = -std=c++11 -pthread
+AM_CPPFLAGS = -isystem $(srcdir)/gmockfused
 
 
-# Code under test are compiled as a convenience lib with coverage instrumentation.
-noinst_LIBRARIES = libarith.a
-libarith_a_SOURCES = ../arith.cpp ../arith.hpp
-libarith_a_CPPFLAGS = -DG_TEST  # allow detection of test build
-libarith_a_CXXFLAGS = $(AM_CXXFLAGS) -g --coverage  # is -g really needed here?
+# Gmock is compiled as a convenience lib without coverage instrumentation
+noinst_LIBRARIES = libgmock-gtest-all.a
 
-distclean-local:
-	-rm *.cpp *.hpp
+libgmock_gtest_all_a_SOURCES = \
+    gmockfused/gmock-gtest-all.cc \
+    gmockfused/gtest/gtest.h \
+    gmockfused/gmock/gmock.h
 
-# Test code is compiled without coverage instrumentation and linked with
-# library of code under test to create test executable.
-bin_PROGRAMS = toy-test
 
-gmock_sources = \
-    gmock-gtest-all.cc \
-    gtest/gtest.h \
-    gmock/gmock.h
+app_sources = \
+    ../arith.cpp \
+    ../arith.hpp
 
-toy_test_SOURCES = \
+test_sources = \
     main.cpp \
-    $(gmock_sources) \
     arith_test.cpp
 
-toy_test_CPPFLAGS = \
-    -I$(srcdir)/..
+bin_PROGRAMS = toy-test
 
-toy_test_CXXFLAGS = $(AM_CXXFLAGS) -g -O2 -pthread
+toy_test_SOURCES = $(app_sources) $(test_sources)
+
+toy_test_CPPFLAGS = \
+    $(AM_CPPFLAGS) \
+    -DG_TEST
+
+toy_test_CXXFLAGS = \
+    $(AM_CXXFLAGS) \
+    -Wall \
+    -Wextra \
+    -pedantic \
+    -fno-elide-constructors \
+    --coverage
 
 toy_test_LDADD = \
-    libarith.a \
-    -lpthread \
-    -lgcov
+    libgmock-gtest-all.a \
+    -lpthread
+
+toy_test_LDFLAGS = --coverage
 

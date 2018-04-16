@@ -1,4 +1,4 @@
-#include "arith.hpp"
+#include "../arith.hpp"
 #include <gtest/gtest.h>
 
 TEST(add, meaningless) {
